@@ -1,14 +1,28 @@
-import {  Text, View } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+import { Link } from "expo-router";
+import { Text, View } from "react-native";
 
-const Home = ()=> {
-    return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-white">
-        <View>
-          <Text>HOME</Text>
-        </View>
-      </SafeAreaView>
-    );
+function Home() {
+  // IF WE DO GET AUTHENTICATED SUCCESSFULLY
+  const { user } = useUser();
+
+  return (
+    <View>
+      <SignedIn>
+        <Text>
+          Hello 👋 {"\n"}
+          {user?.emailAddresses[0].emailAddress}{" "}
+        </Text>
+      </SignedIn>
+      <SignedOut>
+        <Link href="/sign-in">
+          <Text>Sign In</Text>
+        </Link>
+        <Link href="/sign-up">
+          <Text>Sign Up</Text>
+        </Link>
+      </SignedOut>
+    </View>
+  );
 }
-
-export default Home
+export default Home;

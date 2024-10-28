@@ -21,6 +21,7 @@ interface OnboardingCarouselProps {
   data: any[];
 }
 const CustomCarousel: React.FC<OnboardingCarouselProps> = ({ data }) => {
+  console.log(data, "data_____");
 
     console.log(data, "data_paaa");
   const [activeSlide, setActiveSlide] = useState(0);
