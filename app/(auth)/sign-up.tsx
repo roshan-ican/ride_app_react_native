@@ -2,6 +2,7 @@ import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import OAuth from "@/components/OAuth";
 import { icons, images } from "@/constants";
+import { fetchAPI } from "@/lib/fetch";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
 import { useState } from "react";
@@ -58,6 +59,15 @@ const SignUp = () => {
 
       if (completeSignUp.status === "complete") {
         // create a database user!
+        const call = await fetchAPI("/(api)/user", {
+          method: "POST",
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            clerkId: completeSignUp.createdUserId,
+          }),
+        });
+        console.log(call, "call to db");
         await setActive({ session: completeSignUp.createdSessionId });
         setVerification({ ...verification, state: "success" });
       } else {
