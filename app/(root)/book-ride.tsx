@@ -8,9 +8,12 @@ import { useDriverStore, useLocationsStore } from "@/store";
 
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { useEffect, useState } from "react";
+import Payment from "@/components/Payment";
 
 const BookRide = () => {
   const { user } = useUser();
+
+  console.log(user, "___user__");
   const { userAddress, destinationAddress } = useLocationsStore();
   const { drivers, selectedDriver } = useDriverStore();
 
@@ -95,6 +98,14 @@ const BookRide = () => {
               </Text>
             </View>
           </View>
+
+          <Payment
+            fullName={user?.fullName!}
+            email={user?.emailAddresses[0].emailAddress!}
+            amount={driverDetails?.price!}
+            driverId={driverDetails?.id}
+            rideTime={driverDetails?.time!}
+          />
         </>
       </RideLayout>
     </StripeProvider>

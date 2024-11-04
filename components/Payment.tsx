@@ -3,17 +3,34 @@ import CustomButton from "./CustomButton";
 import { PaymentSheetError, useStripe } from "@stripe/stripe-react-native";
 import { Button } from "react-native";
 import { useEffect, useState } from "react";
+import { PaymentProps } from "@/types/type";
 
-const Payment = () => {
+const Payment = ({
+  fullName,
+  email,
+  amount,
+  driverId,
+  rideTime,
+}: PaymentProps) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const openPaymentSheet = async () => {
+    await initializePaymentSheet();
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    } else {
+      setSuccess(true);
+    }
+  };
 
   const initializePaymentSheet = async () => {
     const { error } = await initPaymentSheet({
       merchantDisplayName: "Example, Inc.",
       intentConfiguration: {
         mode: {
-          amount: 1099,
+          amount: parseInt(amount) * 100,
           currencyCode: "USD",
         },
         confirmHandler: confirmHandler,
@@ -39,19 +56,6 @@ const Payment = () => {
   //   const didTapCheckoutButton = async () => {
   //     // implement later
   //   };
-
-  const openPaymentSheet = async () => {
-    await initializePaymentSheet();
-    const { error } = await presentPaymentSheet();
-
-    if (error) {
-      // Customer canceled - you should probably do nothing.
-      Alert.alert(`Error code ${error.code}`, error.message);
-    } else {
-      setSuccess(true);
-      // Payment completed - show a confirmation screen.
-    }
-  };
 
   return (
     <>
